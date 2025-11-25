@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数据可视化与抽奖平台</title>
+    <title>网店商品列表</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.0/dist/echarts.min.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -13,38 +12,31 @@
             <img src="{{ current_user_profile.img }}" alt="用户头像" class="profile-avatar">
             <span class="profile-name">{{ current_user_profile.name }}</span>
         </div>
+        {% if current_user.username == 'admin' %}
+        <a href="{{ url_for('add_product') }}" class="btn btn-primary">添加商品</a>
+        {% endif %}
         <a href="{{ url_for('logout') }}" class="logout-btn">登出</a>
     </nav>
 
     <div class="container">
-        <section class="lottery-section">
-            <h1>购购购幸运抽奖</h1>
-            <div class="lottery-box">
-                <div id="avatar-display">
-                    <img id="avatar-img" src="" alt="头像">
-                    <p id="name-display">姓名</p>
-                </div>
+        <h1 class="text-center">商品列表</h1>
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <a href="{{ url_for('product_detail', product_id=product.id) }}">
+                    <img src="{{ url_for('static', filename='images/' + product.image) }}"
+                         alt="{{ product.name }}" class="product-image">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                </a>
+                <p class="product-price">¥{{ product.price }}</p>
+                <p class="product-desc">{{ product.description[:50] }}...</p>
+                <button onclick="window.location.href='{{ url_for('add_to_cart', product_id=product.id) }}'"
+                        class="add-to-cart-btn">加入购物车</button>
             </div>
-            <div class="controls">
-                <button id="start-btn">开始</button>
-                <button id="stop-btn">停止</button>
-            </div>
-        </section>
-
-        <section class="charts-section">
-            <h1>购购购平台数据分析</h1>
-            <div class="charts-grid">
-                <div id="sales-chart" class="chart-item"></div>
-                <div id="age-chart" class="chart-item"></div>
-                <div id="view-chart" class="chart-item"></div>
-                <div id="follow-chart" class="chart-item"></div>
-            </div>
-        </section>
+            {% endfor %}
+        </div>
     </div>
 
-    <script>
-        const users = {{ users | tojson }};
-    </script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

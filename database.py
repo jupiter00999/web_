@@ -1,4 +1,3 @@
-# database.py
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 import random
@@ -13,18 +12,39 @@ class LoginUser(UserMixin, db.Model):
     password = db.Column(db.String(100), nullable=False)
     nickname = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(20), unique=True, nullable=False)
-    # --- 修改：默认值只存文件名 ---
     avatar = db.Column(db.String(200), nullable=False, default='default_avatar.png')
 
-    # --- 新增：添加一个 to_dict 方法，方便前端使用 ---
     def to_dict(self):
         return {
             'id': self.id,
-            'name': self.nickname,  # 抽奖时显示昵称
+            'name': self.nickname,
             'img': self.avatar
         }
 
 
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    image = db.Column(db.String(200), nullable=False, default='default_product.png')
+    price = db.Column(db.Float, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+
+
+# 新增购物车表（核心修复）
+class CartItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('login_user.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    quantity = db.Column(db.Integer, default=1)  # 商品数量
+    added_at = db.Column(db.DateTime, default=datetime.now)
+
+    # 关联关系（便于查询）
+    user = db.relationship('LoginUser', backref=db.backref('cart_items', lazy=True))
+    product = db.relationship('Product', backref=db.backref('cart_items', lazy=True))
+
+
+# 以下为原有数据模型（保持不变）
 class SalesData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False)
@@ -56,22 +76,31 @@ def init_db(app):
 
         print("正在填充数据库...")
 
-        # --- 修改：创建多个用于抽奖的注册用户 ---
+        # 添加测试用户（包含管理员）
         demo_users = [
             LoginUser(username='admin', nickname='管理员', phone='13800138000', password='password',
-                      avatar='ad123456_1__.jpg'),
-            LoginUser(username='user2', nickname='用户2', phone='13800138001', password='password',
-                      avatar='avatar2.jpg'),
-            LoginUser(username='user3', nickname='用户3', phone='13800138002', password='password',
-                      avatar='avatar3.jpg'),
-            LoginUser(username='user4', nickname='用户4', phone='13800138003', password='password',
-                      avatar='avatar4.jpg'),
-            LoginUser(username='user5', nickname='用户5', phone='13800138004', password='password',
-                      avatar='avatar5.jpg'),
+                      avatar='default_avatar.png'),
+            LoginUser(username='user1', nickname='用户1', phone='13800138001', password='password',
+                      avatar='default_avatar.png'),
         ]
         db.session.add_all(demo_users)
         db.session.commit()
 
+        # 添加默认商品
+        default_products = [
+            Product(name='家乡特产 - 手工腊肠',
+                    description='传统工艺制作，自然风干，咸香可口，真空包装',
+                    price=59.9,
+                    image='default_product.png'),
+            Product(name='家乡特产 - 高山绿茶',
+                    description='海拔800米高山种植，明前采摘，清香回甘',
+                    price=89.0,
+                    image='default_product.png'),
+        ]
+        db.session.add_all(default_products)
+        db.session.commit()
+
+        # 其他测试数据（保持不变）
         sales_data = []
         base_date = datetime.now().date() - timedelta(days=30)
         for i in range(30):
@@ -91,19 +120,15 @@ def init_db(app):
         view_data = [
             ViewData(page='首页', views=random.randint(1000, 5000)),
             ViewData(page='产品页', views=random.randint(800, 4000)),
-            ViewData(page='关于我们', views=random.randint(200, 1000)),
-            ViewData(page='博客', views=random.randint(500, 2500)),
         ]
         db.session.bulk_save_objects(view_data)
 
         follow_data = [
-            FollowData(category='科技', followers=random.randint(10000, 50000)),
-            FollowData(category='娱乐', followers=random.randint(20000, 80000)),
-            FollowData(category='体育', followers=random.randint(5000, 30000)),
-            FollowData(category='财经', followers=random.randint(8000, 40000)),
+            FollowData(category='食品', followers=random.randint(10000, 50000)),
+            FollowData(category='茶叶', followers=random.randint(8000, 40000)),
         ]
         db.session.bulk_save_objects(follow_data)
 
         db.session.commit()
-        print("数据库初始化并填充数据完成！")
-        print("默认登录账号: admin, 密码: password (明文存储)")
+        print("数据库初始化完成！")
+        print("管理员账号: admin, 密码: password")
