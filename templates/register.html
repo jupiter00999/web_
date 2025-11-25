@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+</head>
+<body>
+    <div class="register-container">
+        <h2 class="text-center mb-4">创建新账户</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form id="registerForm" method="post" enctype="multipart/form-data" novalidate>
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+                <small class="form-text text-muted">6-18位，以字母开头，只能包含字母、数字、下划线。</small>
+                <div class="invalid-feedback">用户名格式不正确。</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+                <small class="form-text text-muted">8-16位，必须包含大小写字母和数字。</small>
+                <div class="invalid-feedback">密码格式不正确。</div>
+            </div>
+
+            <div class="form-group">
+                <label for="nickname">昵称</label>
+                <input type="text" class="form-control" id="nickname" name="nickname" required>
+                <div class="invalid-feedback">昵称不能为空。</div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">手机号</label>
+                <input type="tel" class="form-control" id="phone" name="phone" required>
+                <div class="invalid-feedback">请输入有效的11位手机号。</div>
+            </div>
+
+            <div class="form-group">
+                <label for="avatar">头像</label>
+                <input type="file" class="form-control-file" id="avatar" name="avatar" accept="image/*">
+                <!-- --- 修改：预览图也使用url_for --- -->
+                <img id="preview" class="preview-avatar" src="{{ url_for('static', filename='images/default_avatar.png') }}" alt="头像预览">
+            </div>
+
+            <div class="form-group d-flex justify-content-between">
+                <button type="submit" class="btn btn-success">注册</button>
+                <button type="reset" class="btn btn-secondary">重置</button>
+            </div>
+        </form>
+        <p class="text-center mt-3">已有账号? <a href="{{ url_for('login') }}">返回登录</a></p>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/register.js') }}"></script>
+</body>
+</html>

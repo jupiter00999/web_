@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据可视化与抽奖平台</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.0/dist/echarts.min.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="user-profile-card">
+            <img src="{{ current_user_profile.img }}" alt="用户头像" class="profile-avatar">
+            <span class="profile-name">{{ current_user_profile.name }}</span>
+        </div>
+        <a href="{{ url_for('logout') }}" class="logout-btn">登出</a>
+    </nav>
+
+    <div class="container">
+        <section class="lottery-section">
+            <h1>购购购幸运抽奖</h1>
+            <div class="lottery-box">
+                <div id="avatar-display">
+                    <img id="avatar-img" src="" alt="头像">
+                    <p id="name-display">姓名</p>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="start-btn">开始</button>
+                <button id="stop-btn">停止</button>
+            </div>
+        </section>
+
+        <section class="charts-section">
+            <h1>购购购平台数据分析</h1>
+            <div class="charts-grid">
+                <div id="sales-chart" class="chart-item"></div>
+                <div id="age-chart" class="chart-item"></div>
+                <div id="view-chart" class="chart-item"></div>
+                <div id="follow-chart" class="chart-item"></div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const users = {{ users | tojson }};
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

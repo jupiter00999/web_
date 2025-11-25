@@ -1,0 +1,149 @@
+# app.py
+
+from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
+# --- 修改：删除对 LotteryUser 的导入 ---
+from database import db, init_db, LoginUser, SalesData, AgeDistribution, ViewData, FollowData
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from werkzeug.utils import secure_filename
+import os
+
+# --- 基础应用配置 ---
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:123456@localhost/flask_data3'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = 'a-very-secret-key-that-you-should-change'
+
+# --- 文件上传配置 ---
+UPLOAD_FOLDER = 'static/images'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+# --- 初始化扩展 ---
+db.init_app(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+login_manager.login_message = '请先登录以访问此页面。'
+
+
+# --- Flask-Login 回调函数 ---
+@login_manager.user_loader
+def load_user(user_id):
+    return LoginUser.query.get(int(user_id))
+
+
+# --- 辅助函数 ---
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+# --- 认证相关路由 ---
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = LoginUser.query.filter_by(username=username).first()
+
+        if user and user.password == password:
+            login_user(user)
+            flash(f'欢迎回来，{user.nickname}！', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('用户名或密码错误。', 'danger')
+
+    return render_template('login.html')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        nickname = request.form.get('nickname')
+        phone = request.form.get('phone')
+
+        if LoginUser.query.filter_by(username=username).first():
+            flash('用户名已存在。', 'danger')
+            return redirect(url_for('register'))
+        if LoginUser.query.filter_by(phone=phone).first():
+            flash('手机号已被注册。', 'danger')
+            return redirect(url_for('register'))
+
+        avatar_filename = 'default_avatar.png'
+        if 'avatar' in request.files:
+            file = request.files['avatar']
+            if file.filename != '' and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                avatar_filename = f"{username}_{filename}"
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], avatar_filename))
+
+        new_user = LoginUser(username=username, nickname=nickname, phone=phone, avatar=avatar_filename,
+                             password=password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        # --- 删除为新用户创建LotteryUser的代码 ---
+        flash('注册成功！请登录。', 'success')
+        return redirect(url_for('login'))
+
+    return render_template('register.html')
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('您已成功登出。', 'info')
+    return redirect(url_for('login'))
+
+
+# --- 主要功能路由 ---
+@app.route('/')
+@login_required
+def index():
+    all_login_users = LoginUser.query.all()
+
+    lottery_pool = []
+    for user in all_login_users:
+        user_dict = user.to_dict()
+        user_dict['img'] = url_for('static', filename=f'images/{user.avatar}')
+        lottery_pool.append(user_dict)
+
+    # 当前用户的信息也包含在这个池子里了
+    current_profile = next((user for user in lottery_pool if user['id'] == current_user.id), None)
+
+    return render_template('index.html', users=lottery_pool, current_user_profile=current_profile)
+
+
+@app.route('/api/charts_data')
+@login_required
+def get_charts_data():
+    sales = SalesData.query.order_by(SalesData.date).all()
+    sales_chart = {'dates': [s.date.strftime('%Y-%m-%d') for s in sales], 'amounts': [s.amount for s in sales]}
+    age_dist = AgeDistribution.query.all()
+    age_chart = {'groups': [a.age_group for a in age_dist], 'counts': [a.count for a in age_dist]}
+    views = ViewData.query.all()
+    view_chart = {'pages': [v.page for v in views], 'view_counts': [v.views for v in views]}
+    follows = FollowData.query.all()
+    follow_chart = {'categories': [f.category for f in follows], 'follower_counts': [f.followers for f in follows]}
+    return jsonify({'sales': sales_chart, 'age': age_chart, 'view': view_chart, 'follow': follow_chart})
+
+
+# --- 应用入口 ---
+if __name__ == '__main__':
+    try:
+        print("正在启动Flask开发服务器...")
+        print("如果数据库不存在或需要重置，请手动运行初始化脚本。")
+        app.run(debug=True)
+    except Exception as e:
+        print("=" * 50)
+        print("!!! 发生致命错误，程序无法启动 !!!")
+        print(f"错误详情: {e}")
+        print("=" * 50)
+        input("按任意键退出...")
