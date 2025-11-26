@@ -13,27 +13,16 @@
             <img src="{{ current_user_profile.img }}" alt="用户头像" class="profile-avatar">
             <span class="profile-name">{{ current_user_profile.name }}</span>
         </div>
-        <div>
-            <p>当前登录用户：{{ current_user_profile.name }}</p>
-        </div>
-        <div>
-
+        <p>当前登录用户：{{ current_user_profile.name }}</p>
         <a href="{{ url_for('logout') }}" class="logout-btn">登出</a>
-        </div>
-
     </nav>
 
-
-
-
     <div class="container">
-        <!-- 已删除抽奖相关模块 -->
         <section class="welcome-section">
             <h1>欢迎使用平台</h1>
             <div id="content">
                 <div id="list_wrap">
-                <!-- 商品列表部分修改 -->
-                    <ul>
+                    <ul id="product-list">
                         <!-- 商品列表 -->
                         <li class="good_li">
                             <a href="#">
@@ -46,6 +35,9 @@
                                 <div class="gseller">
                                     叠纸心意旗舰店
                                 </div>
+                                <button class="add-to-cart-btn" data-id="1" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    加入购物车
+                                </button>
                             </a>
                         </li>
                         <li class="good_li">
@@ -59,6 +51,9 @@
                                 <div class="gseller">
                                     叠纸心意旗舰店
                                 </div>
+                                <button class="add-to-cart-btn" data-id="2" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    加入购物车
+                                </button>
                             </a>
                         </li>
                         <li class="good_li">
@@ -71,6 +66,9 @@
                                 <div class="gseller">
                                     叠纸心意旗舰店
                                 </div>
+                                <button class="add-to-cart-btn" data-id="3" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    加入购物车
+                                </button>
                             </a>
                         </li>
                         <li class="good_li">
@@ -83,6 +81,9 @@
                                 <div class="gseller">
                                     叠纸心意旗舰店
                                 </div>
+                                <button class="add-to-cart-btn" data-id="4" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    加入购物车
+                                </button>
                             </a>
                         </li>
                         <li class="good_li">
@@ -95,6 +96,9 @@
                                 <div class="gseller">
                                     叠纸心意旗舰店
                                 </div>
+                                <button class="add-to-cart-btn" data-id="5" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    加入购物车
+                                </button>
                             </a>
                         </li>
                         <li class="good_li">
@@ -107,6 +111,9 @@
                                 <div class="gseller">
                                     米哈游旗舰店
                                 </div>
+                                <button class="add-to-cart-btn" data-id="6" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    加入购物车
+                                </button>
                             </a>
                         </li>
                         <li class="good_li">
@@ -119,18 +126,24 @@
                                 <div class="gseller">
                                     叠纸心意旗舰店
                                 </div>
+                                <button class="add-to-cart-btn" data-id="7" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    加入购物车
+                                </button>
                             </a>
                         </li>
                         <li class="good_li">
                             <a href="#">
                                 <img src="{{ url_for('static', filename='images/商品 (7).jpg') }}" alt="">
-                                <div class="gname"></div>
+                                <div class="gname">【米哈游】未定事件簿 周边商品</div>
                                 <div class="gprice">
                                     <span id="new">￥79.0</span>
                                 </div>
                                 <div class="gseller">
                                     米哈游旗舰店
                                 </div>
+                                <button class="add-to-cart-btn" data-id="8" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    加入购物车
+                                </button>
                             </a>
                         </li>
                         <li class="good_li">
@@ -144,12 +157,15 @@
                                 <div class="gseller">
                                     叠纸心意旗舰店
                                 </div>
+                                <button class="add-to-cart-btn" data-id="9" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    加入购物车
+                                </button>
                             </a>
                         </li>
                         <li class="good_li">
                             <a href="#">
                                 <img src="{{ url_for('static', filename='images/商品 (9).jpg') }}" alt="">
-                                <div class="gname">【米哈游/未定事件簿】 日常系列 Q版毛绒零钱包 miHoYo</div>
+                                <div class="gname">【米哈游/未定事件簿】日常系列 Q版毛绒零钱包 miHoYo</div>
                                 <div class="gprice">
                                     <span id="old">￥38.0</span>
                                     <span id="new">￥32.0</span>
@@ -157,6 +173,9 @@
                                 <div class="gseller">
                                     米哈游旗舰店
                                 </div>
+                                <button class="add-to-cart-btn" data-id="10" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    加入购物车
+                                </button>
                             </a>
                         </li>
                         <li class="good_li">
@@ -170,12 +189,34 @@
                                 <div class="gseller">
                                     米哈游旗舰店
                                 </div>
+                                <button class="add-to-cart-btn" data-id="11" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    加入购物车
+                                </button>
                             </a>
                         </li>
                     </ul>
                 </div>
             </div>
+
         </section>
     </div>
+
+    <!-- 购物车入口按钮 -->
+    <div style="text-align: center; margin: 20px;">
+        <button id="cart-btn" class="btn btn-primary">
+            查看购物车 (<span id="cart-count">0</span>)
+        </button>
+    </div>
+
+    <!-- 购物车弹窗 -->
+    <div id="cart-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="background: white; margin: 50px auto; padding: 20px; max-width: 800px; border-radius: 8px; max-height: 80vh; overflow-y: auto;">
+            <h3>我的购物车 <button id="close-cart" style="float: right; border: none; background: none; font-size: 20px; cursor: pointer;">×</button></h3>
+            <div id="cart-items"></div>
+            <div id="cart-total" style="margin-top: 20px; font-weight: bold; font-size: 18px;"></div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/shopping.js') }}"></script>
 </body>
 </html>

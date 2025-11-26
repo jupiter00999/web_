@@ -1,8 +1,7 @@
 # app.py
 
 from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
-# --- 修改：删除对 LotteryUser 的导入 ---
-from database import db, init_db, LoginUser
+from database import db,LoginUser, Product, CartItem  # 新增Product和CartItem模型
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
 import os
@@ -88,7 +87,6 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        # --- 删除为新用户创建LotteryUser的代码 ---
         flash('注册成功！请登录。', 'success')
         return redirect(url_for('login'))
 
@@ -103,16 +101,156 @@ def logout():
     return redirect(url_for('login'))
 
 
-# --- 主要功能路由 ---
+# --- 商品相关路由 ---
 @app.route('/')
 @login_required
 def index():
+    # 获取所有商品数据
+    products = Product.query.all()
+    product_list = []
+    for p in products:
+        product_list.append({
+            'id': p.id,
+            'name': p.name,
+            'original_price': p.original_price,
+            'current_price': p.current_price,
+            'seller': p.seller,
+            'image': p.image
+        })
+
     current_profile = {
         'id': current_user.id,
         'name': current_user.nickname,
         'img': url_for('static', filename=f'images/{current_user.avatar}')
     }
-    return render_template('index.html', current_user_profile=current_profile)
+    return render_template('index.html', current_user_profile=current_profile, products=product_list)
+
+
+# --- 购物车相关路由 ---
+@app.route('/cart/add', methods=['POST'])
+@login_required
+def add_to_cart():
+    data = request.json
+    product_id = data.get('product_id')
+    quantity = int(data.get('quantity', 1))
+
+    if not product_id:
+        return jsonify({'status': 'error', 'message': '商品ID不能为空'}), 400
+
+    # 检查商品是否存在
+    product = Product.query.get(product_id)
+    if not product:
+        return jsonify({'status': 'error', 'message': '商品不存在'}), 404
+
+    # 检查购物车中是否已有该商品
+    cart_item = CartItem.query.filter_by(user_id=current_user.id, product_id=product_id).first()
+
+    if cart_item:
+        # 更新数量
+        cart_item.quantity += quantity
+    else:
+        # 添加新商品
+        cart_item = CartItem(user_id=current_user.id, product_id=product_id, quantity=quantity)
+        db.session.add(cart_item)
+
+    db.session.commit()
+    return jsonify({'status': 'success', 'message': '已添加到购物车'})
+
+
+@app.route('/cart')
+@login_required
+def view_cart():
+    # 获取当前用户的购物车商品
+    cart_items = CartItem.query.filter_by(user_id=current_user.id).all()
+
+    # 组装购物车数据（包含商品详情）
+    cart_data = []
+    total_price = 0
+
+    for item in cart_items:
+        product = Product.query.get(item.product_id)
+        if product:
+            item_total = product.current_price * item.quantity
+            total_price += item_total
+            cart_data.append({
+                'id': item.id,
+                'product_id': product.id,
+                'name': product.name,
+                'image': product.image,
+                'current_price': product.current_price,
+                'quantity': item.quantity,
+                'item_total': item_total
+            })
+
+    current_profile = {
+        'id': current_user.id,
+        'name': current_user.nickname,
+        'img': url_for('static', filename=f'images/{current_user.avatar}')
+    }
+
+    return render_template('cart.html',
+                           current_user_profile=current_profile,
+                           cart_items=cart_data,
+                           total_price=total_price)
+
+
+@app.route('/cart/update', methods=['POST'])
+@login_required
+def update_cart():
+    data = request.json
+    item_id = data.get('item_id')
+    quantity = int(data.get('quantity', 1))
+
+    if quantity <= 0:
+        return jsonify({'status': 'error', 'message': '数量必须大于0'}), 400
+
+    cart_item = CartItem.query.filter_by(id=item_id, user_id=current_user.id).first()
+    if not cart_item:
+        return jsonify({'status': 'error', 'message': '购物车项不存在'}), 404
+
+    cart_item.quantity = quantity
+    db.session.commit()
+
+    # 返回更新后的小计
+    product = Product.query.get(cart_item.product_id)
+    item_total = product.current_price * quantity if product else 0
+
+    return jsonify({
+        'status': 'success',
+        'message': '已更新',
+        'item_total': item_total
+    })
+
+
+@app.route('/cart/remove/<int:item_id>', methods=['POST'])
+@login_required
+def remove_from_cart(item_id):
+    cart_item = CartItem.query.filter_by(id=item_id, user_id=current_user.id).first()
+    if not cart_item:
+        return jsonify({'status': 'error', 'message': '购物车项不存在'}), 404
+
+    db.session.delete(cart_item)
+    db.session.commit()
+    return jsonify({'status': 'success', 'message': '已从购物车移除'})
+
+# 在现有代码中添加商品列表API（用于前端加载商品）
+@app.route('/api/products')
+@login_required
+def get_products():
+    products = Product.query.all()
+    product_list = []
+    for p in products:
+        product_list.append({
+            'id': p.id,
+            'name': p.name,
+            'original_price': p.original_price,
+            'current_price': p.current_price,
+            'seller': p.seller,
+            'image': p.image
+        })
+    return jsonify(product_list)
+
+
 
 # --- 应用入口 ---
 if __name__ == '__main__':
