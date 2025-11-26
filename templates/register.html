@@ -48,7 +48,7 @@
 
             <div class="form-group">
                 <label for="avatar">头像</label>
-                <input type="file" class="form-control-file" id="avatar" name="avatar" accept="image/*">
+                <input type="file" class="form-control-file" id="avatar" name="avatar" accept="images/*">
                 <!-- --- 修改：预览图也使用url_for --- -->
                 <img id="preview" class="preview-avatar" src="{{ url_for('static', filename='images/default_avatar.png') }}" alt="头像预览">
             </div>

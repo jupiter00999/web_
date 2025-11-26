@@ -31,10 +31,25 @@ def custom_init_db(app):
                 'original_price': 129.0,
                 'current_price': 99.0,
                 'seller': '叠纸心意旗舰店',
-                'image': '挂件.jpg'
+                'images': '挂件.jpg'
+            },
+            {
+                'name': '【恋与深空】沈星回2025生日珍藏马口铁徽章 预售',
+                'original_price': 15.0,
+                'current_price': 12.0,
+                'seller': '叠纸心意旗舰店',
+                'images': '商品 (3).jpg'
+            },
+            {
+                'name': '【米哈游/未定事件簿】 嗷呜系列 毛绒挂件 miHoYo',
+                'original_price': 95.0,
+                'current_price': 69.0,
+                'seller': '米哈游旗舰店',
+                'images': '挂件.jpg'
             },
             # ... 其他商品数据（保持不变）
         ]
+
 
         # 添加商品到数据库
         for p in products:
@@ -43,7 +58,7 @@ def custom_init_db(app):
                 original_price=p['original_price'],
                 current_price=p['current_price'],
                 seller=p['seller'],
-                image=p['image']
+                images=p['images']
             )
             db.session.add(product)
 

@@ -1,3 +1,4 @@
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 
@@ -25,7 +26,7 @@ class Product(db.Model):
     original_price = db.Column(db.Float)  # 原价，可为空
     current_price = db.Column(db.Float, nullable=False)  # 现价
     seller = db.Column(db.String(100), nullable=False)
-    image = db.Column(db.String(200), nullable=False)  # 图片路径
+    images = db.Column(db.String(200), nullable=False)  # 图片路径
 
 class CartItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,3 +34,10 @@ class CartItem(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
     quantity = db.Column(db.Integer, default=1)
     created_at = db.Column(db.DateTime)
+
+    class Order(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        user_id = db.Column(db.Integer, db.ForeignKey('login_user.id'))
+        # create_time = db.Column(db.DateTime, default=datetime.utcnow)
+        total_price = db.Column(db.Float)
+        status = db.Column(db.String(20), default='pending')  # pending/paid/shipped/delivered

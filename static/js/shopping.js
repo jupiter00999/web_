@@ -5,8 +5,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // 加载购物车数量
     loadCartCount();
     // 绑定购物车按钮事件
-    document.getElementById('cart-btn').addEventListener('click', showCart);
-    document.getElementById('close-cart').addEventListener('click', hideCart);
+    const cartBtn = document.getElementById('cart-btn');
+    const closeCartBtn = document.getElementById('close-cart');
+    if (cartBtn) cartBtn.addEventListener('click', showCart);
+    if (closeCartBtn) closeCartBtn.addEventListener('click', hideCart);
 });
 
 // 加载商品列表
@@ -20,11 +22,12 @@ function loadProducts() {
                 li.className = 'good_li';
                 li.innerHTML = `
                     <a href="#">
-                        <img src="${product.image}" alt="${product.name}">
+                        <img src="/static/images/${product.images}" alt="${product.name}">
+<!--                        <img src="{{ url_for('static', filename='images/') }}${product.images}" alt="${product.name}">-->
                         <div class="gname">${product.name}</div>
                         <div class="gprice">
                             ${product.original_price ? `<span id="old">￥${product.original_price}</span>` : ''}
-                            <span id="new">￥${product.current_price}</span>  <!-- 修复：price → current_price -->
+                            <span id="new">￥${product.current_price}</span> 
                         </div>
                         <div class="gseller">${product.seller}</div>
                         <button class="add-to-cart-btn" data-id="${product.id}" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
@@ -64,25 +67,37 @@ function addToCart(productId) {
 
 // 加载购物车数量
 function loadCartCount() {
-    fetch('/cart')
-        .then(res => res.json())
+    fetch('/api/cart')  // 修改为数据接口
+        .then(res => {
+            if (!res.ok) throw new Error('接口请求失败');
+            return res.json();
+        })
         .then(items => {
             const count = items.reduce((total, item) => total + item.quantity, 0);
             document.getElementById('cart-count').textContent = count;
-        });
+        })
+        .catch(err => console.error('加载购物车数量失败:', err));
 }
+
 
 // 显示购物车
 function showCart() {
-    fetch('/cart')  // 修复：API路径与app.py对应
-        .then(res => res.json())
+    fetch('/api/cart')  // 修改为数据接口
+        .then(res => {
+            if (!res.ok) throw new Error('接口请求失败');
+            return res.json();
+
+        })
         .then(items => {
             const cartItems = document.getElementById('cart-items');
-            cartItems.innerHTML = '';
+            const cartModal = document.getElementById('cart-modal');
+            if (!cartItems || !cartModal) return;
 
+            cartItems.innerHTML = '';
             if (items.length === 0) {
                 cartItems.innerHTML = '<p>购物车是空的</p>';
                 document.getElementById('cart-total').textContent = '';
+                cartModal.style.display = 'block';  // 显示空购物车
                 return;
             }
 
@@ -93,7 +108,7 @@ function showCart() {
                 div.style.padding = '10px 0';
                 div.style.borderBottom = '1px solid #eee';
                 div.innerHTML = `
-                    <img src="${item.image}" style="width: 50px; height: 50px; object-fit: cover;">
+                    <img src="${item.images}" style="width: 50px; height: 50px; object-fit: cover;">
                     <span style="margin-left: 10px;">${item.name}</span>
                     <span style="margin-left: 10px; color: red;">￥${item.current_price}</span> 
                     <span style="margin-left: 10px;">数量: ${item.quantity}</span>
@@ -103,8 +118,9 @@ function showCart() {
             });
 
             document.getElementById('cart-total').textContent = `总计: ￥${total.toFixed(2)}`;
-            document.getElementById('cart-modal').style.display = 'block';
-        });
+            cartModal.style.display = 'block';
+        })
+        .catch(err => console.error('加载购物车失败:', err));
 }
 
 // 隐藏购物车

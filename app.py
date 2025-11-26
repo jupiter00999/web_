@@ -115,7 +115,7 @@ def index():
             'original_price': p.original_price,
             'current_price': p.current_price,
             'seller': p.seller,
-            'image': p.image
+            'images': url_for('static', filename=f'images/{p.images}')
         })
 
     current_profile = {
@@ -157,6 +157,31 @@ def add_to_cart():
     return jsonify({'status': 'success', 'message': '已添加到购物车'})
 
 
+@app.route('/api/cart')
+@login_required
+def get_cart_data():
+    cart_items = CartItem.query.filter_by(user_id=current_user.id).all()
+    cart_data = []
+    total_price = 0
+    for item in cart_items:
+        product = Product.query.get(item.product_id)
+        if product:
+            item_total = product.current_price * item.quantity
+            total_price += item_total
+            cart_data.append({
+                'id': item.id,
+                'product_id': product.id,
+                'name': product.name,
+                # 修复图片路径：使用url_for生成完整路径
+                'images': url_for('static', filename=f'images/{product.images}'),
+                'current_price': product.current_price,
+                'quantity': item.quantity,
+                'item_total': item_total
+            })
+    return jsonify(cart_data)
+
+
+
 @app.route('/cart')
 @login_required
 def view_cart():
@@ -176,7 +201,7 @@ def view_cart():
                 'id': item.id,
                 'product_id': product.id,
                 'name': product.name,
-                'image': product.image,
+                'images': product.images,
                 'current_price': product.current_price,
                 'quantity': item.quantity,
                 'item_total': item_total
@@ -246,7 +271,7 @@ def get_products():
             'original_price': p.original_price,
             'current_price': p.current_price,
             'seller': p.seller,
-            'image': p.image
+            'images': p.images
         })
     return jsonify(product_list)
 
