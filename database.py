@@ -2,6 +2,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 
+
 db = SQLAlchemy()  # 数据库实例，供全项目使用
 
 class LoginUser(UserMixin, db.Model):
@@ -27,6 +28,8 @@ class Product(db.Model):
     current_price = db.Column(db.Float, nullable=False)  # 现价
     seller = db.Column(db.String(100), nullable=False)
     images = db.Column(db.String(200), nullable=False)  # 图片路径
+    sales = db.Column(db.Integer, default=0, nullable=False)  # 新增销量字段
+    price_desc = db.Column(db.String(50), nullable=False)  # 价格描述
 
 class CartItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -34,10 +37,3 @@ class CartItem(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
     quantity = db.Column(db.Integer, default=1)
     created_at = db.Column(db.DateTime)
-
-    class Order(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        user_id = db.Column(db.Integer, db.ForeignKey('login_user.id'))
-        # create_time = db.Column(db.DateTime, default=datetime.utcnow)
-        total_price = db.Column(db.Float)
-        status = db.Column(db.String(20), default='pending')  # pending/paid/shipped/delivered

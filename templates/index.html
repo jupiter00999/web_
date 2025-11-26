@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数据可视化与抽奖平台</title>
+    <title>购购购平台</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.0/dist/echarts.min.js"></script>
 </head>
@@ -16,184 +16,101 @@
         <p>当前登录用户：{{ current_user_profile.name }}</p>
         <a href="{{ url_for('logout') }}" class="logout-btn">登出</a>
     </nav>
+    <!-- 头部 -->
+    <header id="header">
+        <div id="wrap">
+            <!-- 1 -->
+            <div id="logo">
+                <a href="#">
+                    <img src="{{ url_for('static', filename='images/logo2048.png') }}" alt="">
+                </a>
+            </div>
+            <!-- 导航栏-->
+            <nav id="nav">
+                <ul>
+                    <li>
+                        <a href="#">首页</a>
+                    </li>
+                    <li> 
+                        <a href="#">商品分类</a>
+                    </li>
+                    <li>
+                        <a href="#">收藏</a>
+                    </li>
+                    <li>
+                        <a href="#">订单</a>
+                    </li>
+                    <li>
+                        <a href="#">个人中心</a>
+                    </li>                  
+                    <li>
+                        <a href="#">帮助</a>
+                    </li>
+                </ul>    
+            </nav>
+            <!-- 搜索框 -->
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="搜索商品名称..."> 
+                <button class="search-btn">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <div>搜索</div>
+                </button>
+            </div>
+        </div>
+        
+     </header>
+
+
+    
 
     <div class="container">
         <section class="welcome-section">
-            <h1>欢迎使用平台</h1>
+            <h1>河池山水，养生福地，欢迎选购河池特色农产品</h1>
+            <!-- 新增：销量可视化区域 -->
+        <div class="sales-chart-section" style="margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #333;">热销商品排行</h2>
+            <div id="sales-chart" style="width: 100%; height: 400px;"></div>
+        </div>
+            
             <div id="content">
+
+                <!-- 购物车入口按钮 -->
+                <div style="text-align: center; margin: 20px;">
+                    <button id="cart-btn" class="btn btn-primary">
+                        查看购物车 (<span id="cart-count">0</span>)
+                    </button>
+                </div>
+
+                <!-- 购物车弹窗 -->
+                <div id="cart-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000;">
+                    <div style="background: white; margin: 50px auto; padding: 20px; max-width: 800px; border-radius: 8px; max-height: 80vh; overflow-y: auto;">
+                        <h3>我的购物车
+                            <button id="close-cart" style="float: right; border: none; background: none; font-size: 20px; cursor: pointer;">×</button>
+                        </h3>
+                        <div id="cart-items"></div> <!-- 购物车内容容器 -->
+                        <div id="cart-total" style="margin-top: 20px; font-weight: bold; font-size: 18px;"></div> <!-- 总计容器 -->
+                    </div>
+                </div>
+
                 <div id="list_wrap">
                     <ul id="product-list">
-                        <!-- 商品列表 -->
+
 <!--                        <li class="good_li">-->
 <!--                            <a href="#">-->
-<!--                                <img src="{{ url_for('static', filename='images/挂件.jpg') }}" alt="">-->
-<!--                                <div class="gname">【闪耀暖暖】明星梦礼系列毛绒挂件</div>-->
+<!--                                <img src="{{ url_for('static', filename='images/商品 (10).jpg') }}" alt="">-->
+<!--                                <div class="gname">【米哈游/未定事件簿】归心之所系列 Q版亚克力冰箱贴set</div>-->
 <!--                                <div class="gprice">-->
-<!--                                    <span id="old">￥129.0</span>-->
-<!--                                    <span id="new">￥99.0</span>-->
-<!--                                </div>-->
-<!--                                <div class="gseller">-->
-<!--                                    叠纸心意旗舰店-->
-<!--                                </div>-->
-<!--                                <button class="add-to-cart-btn" data-id="1" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">-->
-<!--                                    加入购物车-->
-<!--                                </button>-->
-<!--                            </a>-->
-<!--                        </li>-->
-<!--                        <li class="good_li">-->
-<!--                            <a href="#">-->
-<!--                                <img src="{{ url_for('static', filename='images/商品 (1).jpg') }}" alt="">-->
-<!--                                <div class="gname">【恋与制作人】PrismLand联动相伴时光系列10cm婴儿棉花娃娃</div>-->
-<!--                                <div class="gprice">-->
-<!--                                    <span id="old">￥99.0</span>-->
-<!--                                    <span id="new">￥69.0</span>-->
-<!--                                </div>-->
-<!--                                <div class="gseller">-->
-<!--                                    叠纸心意旗舰店-->
-<!--                                </div>-->
-<!--                                <button class="add-to-cart-btn" data-id="2" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">-->
-<!--                                    加入购物车-->
-<!--                                </button>-->
-<!--                            </a>-->
-<!--                        </li>-->
-<!--                        <li class="good_li">-->
-<!--                            <a href="#">-->
-<!--                                <img src="{{ url_for('static', filename='images/商品 (2).jpg') }}" alt="">-->
-<!--                                <div class="gname">【恋与制作人】爱环环相扣系列挂件</div>-->
-<!--                                <div class="gprice">-->
-<!--                                    <span id="new">￥15.0</span>-->
-<!--                                </div>-->
-<!--                                <div class="gseller">-->
-<!--                                    叠纸心意旗舰店-->
-<!--                                </div>-->
-<!--                                <button class="add-to-cart-btn" data-id="3" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">-->
-<!--                                    加入购物车-->
-<!--                                </button>-->
-<!--                            </a>-->
-<!--                        </li>-->
-<!--                        <li class="good_li">-->
-<!--                            <a href="#">-->
-<!--                                <img src="{{ url_for('static', filename='images/商品 (3).jpg') }}" alt="">-->
-<!--                                <div class="gname">【恋与深空】沈星回2025生日珍藏马口铁徽章 预售</div>-->
-<!--                                <div class="gprice">-->
-<!--                                    <span id="new">￥18.0</span>-->
-<!--                                </div>-->
-<!--                                <div class="gseller">-->
-<!--                                    叠纸心意旗舰店-->
-<!--                                </div>-->
-<!--                                <button class="add-to-cart-btn" data-id="4" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">-->
-<!--                                    加入购物车-->
-<!--                                </button>-->
-<!--                            </a>-->
-<!--                        </li>-->
-<!--                        <li class="good_li">-->
-<!--                            <a href="#">-->
-<!--                                <img src="{{ url_for('static', filename='images/商品 (4).jpg') }}" alt="">-->
-<!--                                <div class="gname">【恋与深空】万达电影联动系列镭射票套组 预售</div>-->
-<!--                                <div class="gprice">-->
-<!--                                    <span id="new">￥26.0</span>-->
-<!--                                </div>-->
-<!--                                <div class="gseller">-->
-<!--                                    叠纸心意旗舰店-->
-<!--                                </div>-->
-<!--                                <button class="add-to-cart-btn" data-id="5" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">-->
-<!--                                    加入购物车-->
-<!--                                </button>-->
-<!--                            </a>-->
-<!--                        </li>-->
-<!--                        <li class="good_li">-->
-<!--                            <a href="#">-->
-<!--                                <img src="{{ url_for('static', filename='images/商品 (5).jpg') }}" alt="">-->
-<!--                                <div class="gname">【米哈游/未定事件簿】 嗷呜系列 毛绒挂件 miHoYo</div>-->
-<!--                                <div class="gprice">-->
-<!--                                    <span id="new">￥69.0</span>-->
+<!--                                    <span id="old">￥28.0</span>-->
+<!--                                    <span id="new">￥22.0</span>-->
 <!--                                </div>-->
 <!--                                <div class="gseller">-->
 <!--                                    米哈游旗舰店-->
 <!--                                </div>-->
-<!--                                <button class="add-to-cart-btn" data-id="6" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">-->
+<!--                                <button class="add-to-cart-btn" data-id="11" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">-->
 <!--                                    加入购物车-->
 <!--                                </button>-->
 <!--                            </a>-->
 <!--                        </li>-->
-<!--                        <li class="good_li">-->
-<!--                            <a href="#">-->
-<!--                                <img src="{{ url_for('static', filename='images/商品 (6).jpg') }}" alt="">-->
-<!--                                <div class="gname">【恋与制作人】瑞兔贺春系列毛绒挂件</div>-->
-<!--                                <div class="gprice">-->
-<!--                                    <span id="new">￥65.0</span>-->
-<!--                                </div>-->
-<!--                                <div class="gseller">-->
-<!--                                    叠纸心意旗舰店-->
-<!--                                </div>-->
-<!--                                <button class="add-to-cart-btn" data-id="7" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">-->
-<!--                                    加入购物车-->
-<!--                                </button>-->
-<!--                            </a>-->
-<!--                        </li>-->
-<!--                        <li class="good_li">-->
-<!--                            <a href="#">-->
-<!--                                <img src="{{ url_for('static', filename='images/商品 (7).jpg') }}" alt="">-->
-<!--                                <div class="gname">【米哈游】未定事件簿 周边商品</div>-->
-<!--                                <div class="gprice">-->
-<!--                                    <span id="new">￥79.0</span>-->
-<!--                                </div>-->
-<!--                                <div class="gseller">-->
-<!--                                    米哈游旗舰店-->
-<!--                                </div>-->
-<!--                                <button class="add-to-cart-btn" data-id="8" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">-->
-<!--                                    加入购物车-->
-<!--                                </button>-->
-<!--                            </a>-->
-<!--                        </li>-->
-<!--                        <li class="good_li">-->
-<!--                            <a href="#">-->
-<!--                                <img src="{{ url_for('static', filename='images/商品 (8).jpg') }}" alt="">-->
-<!--                                <div class="gname">【恋与制作人】家有萌宠系列马口铁徽章vol6</div>-->
-<!--                                <div class="gprice">-->
-<!--                                    <span id="old">￥18.0</span>-->
-<!--                                    <span id="new">￥12.0</span>-->
-<!--                                </div>-->
-<!--                                <div class="gseller">-->
-<!--                                    叠纸心意旗舰店-->
-<!--                                </div>-->
-<!--                                <button class="add-to-cart-btn" data-id="9" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">-->
-<!--                                    加入购物车-->
-<!--                                </button>-->
-<!--                            </a>-->
-<!--                        </li>-->
-<!--                        <li class="good_li">-->
-<!--                            <a href="#">-->
-<!--                                <img src="{{ url_for('static', filename='images/商品 (9).jpg') }}" alt="">-->
-<!--                                <div class="gname">【米哈游/未定事件簿】日常系列 Q版毛绒零钱包 miHoYo</div>-->
-<!--                                <div class="gprice">-->
-<!--                                    <span id="old">￥38.0</span>-->
-<!--                                    <span id="new">￥32.0</span>-->
-<!--                                </div>-->
-<!--                                <div class="gseller">-->
-<!--                                    米哈游旗舰店-->
-<!--                                </div>-->
-<!--                                <button class="add-to-cart-btn" data-id="10" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">-->
-<!--                                    加入购物车-->
-<!--                                </button>-->
-<!--                            </a>-->
-<!--                        </li>-->
-                        <li class="good_li">
-                            <a href="#">
-                                <img src="{{ url_for('static', filename='images/商品 (10).jpg') }}" alt="">
-                                <div class="gname">【米哈游/未定事件簿】归心之所系列 Q版亚克力冰箱贴set</div>
-                                <div class="gprice">
-                                    <span id="old">￥28.0</span>
-                                    <span id="new">￥22.0</span>
-                                </div>
-                                <div class="gseller">
-                                    米哈游旗舰店
-                                </div>
-                                <button class="add-to-cart-btn" data-id="11" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                                    加入购物车
-                                </button>
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </div>
@@ -201,23 +118,9 @@
         </section>
     </div>
 
-    <!-- 购物车入口按钮 -->
-    <div style="text-align: center; margin: 20px;">
-        <button id="cart-btn" class="btn btn-primary">
-            查看购物车 (<span id="cart-count">0</span>)
-        </button>
-    </div>
-
-    <!-- 购物车弹窗 -->
-    <div id="cart-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000;">
-        <div style="background: white; margin: 50px auto; padding: 20px; max-width: 800px; border-radius: 8px; max-height: 80vh; overflow-y: auto;">
-            <h3>我的购物车
-                <button id="close-cart" style="float: right; border: none; background: none; font-size: 20px; cursor: pointer;">×</button>
-            </h3>
-            <div id="cart-items"></div> <!-- 购物车内容容器 -->
-            <div id="cart-total" style="margin-top: 20px; font-weight: bold; font-size: 18px;"></div> <!-- 总计容器 -->
-        </div>
-    </div>
+    
+<script src="{{ url_for('static', filename='js/shopping.js') }}"></script>
+<script src="{{ url_for('static', filename='js/sales-chart.js') }}"></script>
 
     <script src="{{ url_for('static', filename='js/shopping.js') }}"></script>
 </body>

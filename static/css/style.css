@@ -1,147 +1,280 @@
-body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
-.navbar { background-color: #333; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
-.user-profile-card { display: flex; align-items: center; gap: 10px; }
-.profile-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
-.profile-name { font-size: 1.1em; font-weight: bold; }
-.logout-btn { color: white; text-decoration: none; background-color: #dc3545; padding: 8px 15px; border-radius: 5px; transition: background-color 0.3s; }
-.logout-btn:hover { background-color: #c82333; text-decoration: none; }
-.container { max-width: 1400px; margin: 0 auto; padding-top: 20px; }
-h1 { text-align: center; color: #333; }
-.lottery-section {
-    background: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    text-align: center;
-    margin-bottom: 40px; }
-.lottery-box { margin: 20px 0; }
-#avatar-display {
-    width: 200px;
-    height: 200px;
+/* 全局样式设置 */
+body { 
+    font-family: 'Helvetica Neue', Arial, sans-serif; 
+    background-color: #ffffff; 
+    margin: 0; 
+    padding: 20px; 
+}
+
+/* 顶部导航栏（包含用户信息和登出按钮） */
+.navbar { 
+    background-color: #e6f7ff; 
+    color: rgb(0, 0, 0); 
+    padding: 10px 20px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+/* 用户信息卡片（头像+用户名组合） */
+.user-profile-card { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+}
+
+/* 用户头像样式 */
+.profile-avatar { 
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    border: 2px solid #fff; 
+    object-fit: cover; 
+}
+
+/* 用户名文本样式 */
+.profile-name { 
+    font-size: 1.1em; 
+    font-weight: bold; 
+}
+
+/* 登出按钮样式 */
+.logout-btn { 
+    color: white; 
+    text-decoration: none; 
+    background-color: #34dbd5; 
+    padding: 8px 15px; 
+    border-radius: 5px; 
+    transition: background-color 0.3s; 
+}
+
+.logout-btn:hover { 
+    background-color: #3193dd; 
+    text-decoration: none; 
+}
+
+/* 页面主容器（包裹所有内容） */
+.container { 
+    max-width: 1400px; 
+    margin: 0 auto; 
+    padding-top: 20px; 
+    background-color: #fff;
+}
+
+/* 头部区域（包含logo、导航栏、搜索框） */
+#header{
+    height: 150px;
+    background: linear-gradient(to bottom, #e6f7ff, #fff); 
+    display: flex;
+    align-items: center;
+    padding: 0 5%;
+}
+
+/* 头部内容包裹容器 */
+#wrap{
     margin: 0 auto;
-    /*border: 5px solid #007bff;*/
-    /*border-radius: 50%; */
-    /*display: flex; */
-    flex-direction: column;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+/* Logo容器样式 */
+#logo{ 
+    width: 60%; 
+    max-width: 200px; 
+    min-width: 120px;
+    height: 100px;
+}
+
+#logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; 
+}
+
+/* 主导航菜单（首页/分类/收藏等） */
+#nav{
+    margin-left: 5%;
+    flex: 1;
+}
+
+#nav li{
+    list-style: none;
+    display: inline-block;
+    margin-right: 3%;
+    line-height: 100px;
+    padding: 0 5px;
+}
+
+#nav li.active a {
+    color: #34dbd5;
+    font-weight: bold;
+}
+
+a{
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    white-space: nowrap;
+}
+
+#nav a:hover{
+    color: #34dbd5;
+    font-weight: bold;
+}
+
+/* 搜索框区域（输入框+搜索按钮） */
+.search-container {
+    display: flex;
+    margin-right: 3%;
+    max-width: 500px;
+    margin-left: 20px;
+}
+
+/* 搜索输入框样式 */
+.search-input {
+    width: 280px;
+    height: 38px;
+    padding: 0 15px;
+    border: none;
+    border-radius: 8px 0 0 4px;
+    outline: none; 
+    font-size: 14px;
+    color: #333;
+}
+
+/* 搜索按钮样式 */
+.search-btn {
+    height: 38px;
+    width: 50px; 
+    background-color: #34dbd5;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    background-color: #e9ecef; }
-#avatar-img { width: 80%; height: 80%; object-fit: cover; border-radius: 50%; }
-#name-display { margin-top: 10px; font-size: 1.2em; font-weight: bold; color: #333; }
-.controls button { font-size: 1.2em; padding: 10px 30px; margin: 0 10px; border: none; border-radius: 5px; cursor: pointer; color: white; }
-#start-btn { background-color: #28a745; }
-#stop-btn { background-color: #dc3545; }
-.controls button:disabled { background-color: #ccc; cursor: not-allowed; }
-.charts-section { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-.charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; }
-.chart-item { height: 350px; border: 1px solid #ddd; border-radius: 4px; }
-
-/* Auth pages */
-.auth-container, .register-container { max-width: 400px; margin: 50px auto; padding: 2rem; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-
-
-/* 历史记录提示框样式 */
-.history-container {
-    position: relative;
-}
-.history-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    max-height: 200px;
-    overflow-y: auto;
-    display: none;
-}
-.history-item {
-    padding: 8px 12px;
-    cursor: pointer;
-}
-.history-item:hover {
-    background-color: #f8f9fa;
-}
-.history-header {
-    padding: 8px 12px;
-    border-bottom: 1px solid #eee;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-}
-.clear-history {
-    color: #dc3545;
-    font-size: 0.8em;
-    cursor: pointer;
 }
 
+.search-btn i {
+    font-size: 16px;
+}
 
+.search-btn:hover {
+    background-color: #3193dd; 
+}
 
+/* 页面主标题样式 */
+h1 { 
+    text-align: center; 
+    color: #333; 
+}
 
+/* 登录/注册表单容器 */
+.auth-container, .register-container { 
+    max-width: 400px; 
+    margin: 50px auto; 
+    padding: 2rem; 
+    background: white; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+}
+
+/* 商品列表容器 */
 #content{
     margin: 0 auto;
     width: 80%;
 }
 
-/* 商品 */
+/* 单个商品卡片样式 */
 li.good_li{
     display: inline-block;
     list-style: none;
-
     width: 200px;
     padding: 10px;
     margin: 15px;
-
     border: 1px solid #ccc;
 }
 
-/*商品卡片效果*/
+/* 商品卡片悬停效果 */
 li.good_li:hover {
-    border: 3px solid #34dbd5;/*边框*/
-    transform: translateY(-8px); /*上浮*/
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1); /*阴影*/
+    border: 3px solid #34dbd5;
+    transform: translateY(-8px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-/* 商品图片 */
+/* 商品图片样式 */
 .good_li img{
     width: 100%;
     height: 100%;
-    object-fit: cover; /*保持比例填满*/
+    object-fit: cover;
     transition: transform 0.3s ease;
-
 }
 
-
-/* 商品名字 */
+/* 商品名称容器（控制文字溢出） */
 .gname{
     height: 40px;
     line-height: 20px;
-
     overflow:hidden;
     text-overflow:ellipsis;
     display:-webkit-box;
-    /* -webkit-line-clamp:2; */
+    -webkit-line-clamp:2; /* 默认最多显示2行 */
     -webkit-box-orient:vertical;
+    transition: all 0.3s ease;
 }
 
-/* 价格样式 */
+/* 商品名称悬停效果（显示全部文本） */
+li.good_li:hover .gname {
+    -webkit-line-clamp: unset; /* 取消行数限制 */
+    height: auto; /* 高度自适应内容 */
+    white-space: normal;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 5px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* 商品原价（带删除线） */
 #old{
     color: #ccc;
     text-decoration: line-through;
 }
+
+/* 商品现价（红色加粗） */
 #new{
     font-weight: bold;
     color: red;
     font-size: 18px;
 }
+
+/* 价格区域容器 */
 .gprice{
     margin-top: 15px;
 }
 
-/* 店名 */
+/* 商家名称样式 */
 .gseller{
     color: gray;
+    text-align: right;
+}
+
+
+/* 销量显示样式 */
+.gsales {
+    color: #999;
+    font-size: 12px;
+    margin: 5px 0;
+}
+
+/* 图表容器样式 */
+.sales-chart-section {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.sales-chart-section h2 {
+    color: #2c3e50;
+    font-weight: 600;
 }
