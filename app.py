@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
 # --- 修改：删除对 LotteryUser 的导入 ---
-from database import db, init_db, LoginUser, SalesData, AgeDistribution, ViewData, FollowData
+from database import db, init_db, LoginUser
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
 import os
@@ -107,33 +107,12 @@ def logout():
 @app.route('/')
 @login_required
 def index():
-    all_login_users = LoginUser.query.all()
-
-    lottery_pool = []
-    for user in all_login_users:
-        user_dict = user.to_dict()
-        user_dict['img'] = url_for('static', filename=f'images/{user.avatar}')
-        lottery_pool.append(user_dict)
-
-    # 当前用户的信息也包含在这个池子里了
-    current_profile = next((user for user in lottery_pool if user['id'] == current_user.id), None)
-
-    return render_template('index.html', users=lottery_pool, current_user_profile=current_profile)
-
-
-@app.route('/api/charts_data')
-@login_required
-def get_charts_data():
-    sales = SalesData.query.order_by(SalesData.date).all()
-    sales_chart = {'dates': [s.date.strftime('%Y-%m-%d') for s in sales], 'amounts': [s.amount for s in sales]}
-    age_dist = AgeDistribution.query.all()
-    age_chart = {'groups': [a.age_group for a in age_dist], 'counts': [a.count for a in age_dist]}
-    views = ViewData.query.all()
-    view_chart = {'pages': [v.page for v in views], 'view_counts': [v.views for v in views]}
-    follows = FollowData.query.all()
-    follow_chart = {'categories': [f.category for f in follows], 'follower_counts': [f.followers for f in follows]}
-    return jsonify({'sales': sales_chart, 'age': age_chart, 'view': view_chart, 'follow': follow_chart})
-
+    current_profile = {
+        'id': current_user.id,
+        'name': current_user.nickname,
+        'img': url_for('static', filename=f'images/{current_user.avatar}')
+    }
+    return render_template('index.html', current_user_profile=current_profile)
 
 # --- 应用入口 ---
 if __name__ == '__main__':

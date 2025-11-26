@@ -13,38 +13,169 @@
             <img src="{{ current_user_profile.img }}" alt="用户头像" class="profile-avatar">
             <span class="profile-name">{{ current_user_profile.name }}</span>
         </div>
+        <div>
+            <p>当前登录用户：{{ current_user_profile.name }}</p>
+        </div>
+        <div>
+
         <a href="{{ url_for('logout') }}" class="logout-btn">登出</a>
+        </div>
+
     </nav>
 
-    <div class="container">
-        <section class="lottery-section">
-            <h1>购购购幸运抽奖</h1>
-            <div class="lottery-box">
-                <div id="avatar-display">
-                    <img id="avatar-img" src="" alt="头像">
-                    <p id="name-display">姓名</p>
-                </div>
-            </div>
-            <div class="controls">
-                <button id="start-btn">开始</button>
-                <button id="stop-btn">停止</button>
-            </div>
-        </section>
 
-        <section class="charts-section">
-            <h1>购购购平台数据分析</h1>
-            <div class="charts-grid">
-                <div id="sales-chart" class="chart-item"></div>
-                <div id="age-chart" class="chart-item"></div>
-                <div id="view-chart" class="chart-item"></div>
-                <div id="follow-chart" class="chart-item"></div>
+
+
+    <div class="container">
+        <!-- 已删除抽奖相关模块 -->
+        <section class="welcome-section">
+            <h1>欢迎使用平台</h1>
+            <div id="content">
+                <div id="list_wrap">
+                <!-- 商品列表部分修改 -->
+                    <ul>
+                        <!-- 商品列表 -->
+                        <li class="good_li">
+                            <a href="#">
+                                <img src="{{ url_for('static', filename='images/挂件.jpg') }}" alt="">
+                                <div class="gname">【闪耀暖暖】明星梦礼系列毛绒挂件</div>
+                                <div class="gprice">
+                                    <span id="old">￥129.0</span>
+                                    <span id="new">￥99.0</span>
+                                </div>
+                                <div class="gseller">
+                                    叠纸心意旗舰店
+                                </div>
+                            </a>
+                        </li>
+                        <li class="good_li">
+                            <a href="#">
+                                <img src="{{ url_for('static', filename='images/商品 (1).jpg') }}" alt="">
+                                <div class="gname">【恋与制作人】PrismLand联动相伴时光系列10cm婴儿棉花娃娃</div>
+                                <div class="gprice">
+                                    <span id="old">￥99.0</span>
+                                    <span id="new">￥69.0</span>
+                                </div>
+                                <div class="gseller">
+                                    叠纸心意旗舰店
+                                </div>
+                            </a>
+                        </li>
+                        <li class="good_li">
+                            <a href="#">
+                                <img src="{{ url_for('static', filename='images/商品 (2).jpg') }}" alt="">
+                                <div class="gname">【恋与制作人】爱环环相扣系列挂件</div>
+                                <div class="gprice">
+                                    <span id="new">￥15.0</span>
+                                </div>
+                                <div class="gseller">
+                                    叠纸心意旗舰店
+                                </div>
+                            </a>
+                        </li>
+                        <li class="good_li">
+                            <a href="#">
+                                <img src="{{ url_for('static', filename='images/商品 (3).jpg') }}" alt="">
+                                <div class="gname">【恋与深空】沈星回2025生日珍藏马口铁徽章 预售</div>
+                                <div class="gprice">
+                                    <span id="new">￥18.0</span>
+                                </div>
+                                <div class="gseller">
+                                    叠纸心意旗舰店
+                                </div>
+                            </a>
+                        </li>
+                        <li class="good_li">
+                            <a href="#">
+                                <img src="{{ url_for('static', filename='images/商品 (4).jpg') }}" alt="">
+                                <div class="gname">【恋与深空】万达电影联动系列镭射票套组 预售</div>
+                                <div class="gprice">
+                                    <span id="new">￥26.0</span>
+                                </div>
+                                <div class="gseller">
+                                    叠纸心意旗舰店
+                                </div>
+                            </a>
+                        </li>
+                        <li class="good_li">
+                            <a href="#">
+                                <img src="{{ url_for('static', filename='images/商品 (5).jpg') }}" alt="">
+                                <div class="gname">【米哈游/未定事件簿】 嗷呜系列 毛绒挂件 miHoYo</div>
+                                <div class="gprice">
+                                    <span id="new">￥69.0</span>
+                                </div>
+                                <div class="gseller">
+                                    米哈游旗舰店
+                                </div>
+                            </a>
+                        </li>
+                        <li class="good_li">
+                            <a href="#">
+                                <img src="{{ url_for('static', filename='images/商品 (6).jpg') }}" alt="">
+                                <div class="gname">【恋与制作人】瑞兔贺春系列毛绒挂件</div>
+                                <div class="gprice">
+                                    <span id="new">￥65.0</span>
+                                </div>
+                                <div class="gseller">
+                                    叠纸心意旗舰店
+                                </div>
+                            </a>
+                        </li>
+                        <li class="good_li">
+                            <a href="#">
+                                <img src="{{ url_for('static', filename='images/商品 (7).jpg') }}" alt="">
+                                <div class="gname"></div>
+                                <div class="gprice">
+                                    <span id="new">￥79.0</span>
+                                </div>
+                                <div class="gseller">
+                                    米哈游旗舰店
+                                </div>
+                            </a>
+                        </li>
+                        <li class="good_li">
+                            <a href="#">
+                                <img src="{{ url_for('static', filename='images/商品 (8).jpg') }}" alt="">
+                                <div class="gname">【恋与制作人】家有萌宠系列马口铁徽章vol6</div>
+                                <div class="gprice">
+                                    <span id="old">￥18.0</span>
+                                    <span id="new">￥12.0</span>
+                                </div>
+                                <div class="gseller">
+                                    叠纸心意旗舰店
+                                </div>
+                            </a>
+                        </li>
+                        <li class="good_li">
+                            <a href="#">
+                                <img src="{{ url_for('static', filename='images/商品 (9).jpg') }}" alt="">
+                                <div class="gname">【米哈游/未定事件簿】 日常系列 Q版毛绒零钱包 miHoYo</div>
+                                <div class="gprice">
+                                    <span id="old">￥38.0</span>
+                                    <span id="new">￥32.0</span>
+                                </div>
+                                <div class="gseller">
+                                    米哈游旗舰店
+                                </div>
+                            </a>
+                        </li>
+                        <li class="good_li">
+                            <a href="#">
+                                <img src="{{ url_for('static', filename='images/商品 (10).jpg') }}" alt="">
+                                <div class="gname">【米哈游/未定事件簿】归心之所系列 Q版亚克力冰箱贴set</div>
+                                <div class="gprice">
+                                    <span id="old">￥28.0</span>
+                                    <span id="new">￥22.0</span>
+                                </div>
+                                <div class="gseller">
+                                    米哈游旗舰店
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </section>
     </div>
-
-    <script>
-        const users = {{ users | tojson }};
-    </script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
