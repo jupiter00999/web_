@@ -1,7 +1,7 @@
 # app.py
-
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
-from database import db,LoginUser, Product, CartItem  # 新增Product和CartItem模型
+from database import db,LoginUser, Product, CartItem
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
 import os
@@ -49,7 +49,7 @@ def login():
         password = request.form.get('password')
         user = LoginUser.query.filter_by(username=username).first()
 
-        if user and user.password == password:
+        if user and check_password_hash(user.password, password):
             login_user(user)
             flash(f'欢迎回来，{user.nickname}！', 'success')
             return redirect(url_for('index'))
@@ -82,8 +82,13 @@ def register():
                 avatar_filename = f"{username}_{filename}"
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], avatar_filename))
 
-        new_user = LoginUser(username=username, nickname=nickname, phone=phone, avatar=avatar_filename,
-                             password=password)
+        new_user = LoginUser(
+            username=username,
+            nickname=nickname,
+            phone=phone,
+            avatar=avatar_filename,
+            password=generate_password_hash(password)  # 加密存储
+        )
         db.session.add(new_user)
         db.session.commit()
 
@@ -271,10 +276,29 @@ def get_products():
             'original_price': p.original_price,
             'current_price': p.current_price,
             'seller': p.seller,
-            'images': p.images
+            'images': p.images,
+            'sales': p.sales,
         })
     return jsonify(product_list)
 
+
+@app.route('/api/sales-data')
+@login_required
+def get_sales_data():
+    # 获取销量前10的商品
+    products = Product.query.order_by(Product.sales.desc()).limit(10).all()
+
+    sales_data = []
+    for product in products:
+        # 提取商品简称（去掉【河池特产】前缀）
+        short_name = product.name.replace('【河池特产】', '')
+        sales_data.append({
+            'name': short_name,
+            'sales': product.sales,
+            'price': product.current_price
+        })
+
+    return jsonify(sales_data)
 
 
 # --- 应用入口 ---

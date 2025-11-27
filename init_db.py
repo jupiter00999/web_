@@ -1,4 +1,6 @@
 # init_db.py（完整修改后）
+from werkzeug.security import generate_password_hash
+
 from app import app
 from database import db, LoginUser, Product, CartItem  # 直接从database导入模型
 
@@ -11,17 +13,27 @@ def custom_init_db(app):
 
         # 创建测试用户（保持不变）
         demo_users = [
-            LoginUser(username='admin', nickname='管理员', phone='13800138000', password='password',
-                      avatar='ad123456_1__.jpg'),
-            LoginUser(username='user2', nickname='用户2', phone='13800138001', password='password',
-                      avatar='avatar2.jpg'),
-            LoginUser(username='user3', nickname='用户3', phone='13800138002', password='password',
-                      avatar='avatar3.jpg'),
-            LoginUser(username='user4', nickname='用户4', phone='13800138003', password='password',
-                      avatar='avatar4.jpg'),
-            LoginUser(username='user5', nickname='用户5', phone='13800138004', password='password',
-                      avatar='avatar5.jpg'),
+            LoginUser(
+                username='admin',
+                nickname='管理员',
+                phone='13800138000',
+                password=generate_password_hash('password'),  # 加密
+                avatar='ad123456_1__.jpg'
+            ),
+            # 其他用户同理...
         ]
+        # demo_users = [
+        #     LoginUser(username='admin', nickname='管理员', phone='13800138000', password='password',
+        #               avatar='ad123456_1__.jpg'),
+        #     LoginUser(username='user2', nickname='用户2', phone='13800138001', password='password',
+        #               avatar='avatar2.jpg'),
+        #     LoginUser(username='user3', nickname='用户3', phone='13800138002', password='password',
+        #               avatar='avatar3.jpg'),
+        #     LoginUser(username='user4', nickname='用户4', phone='13800138003', password='password',
+        #               avatar='avatar4.jpg'),
+        #     LoginUser(username='user5', nickname='用户5', phone='13800138004', password='password',
+        #               avatar='avatar5.jpg'),
+        # ]
         db.session.add_all(demo_users)
 
         # 创建初始商品数据（保持不变）
@@ -155,7 +167,7 @@ def custom_init_db(app):
 
         db.session.commit()
         print("数据库初始化并填充数据完成！")
-        print("默认登录账号: admin, 密码: password (明文存储)")
+        print("默认登录账号: admin, 密码: password (文存储)")
 
 if __name__ == '__main__':
     with app.app_context():

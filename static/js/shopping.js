@@ -23,13 +23,13 @@ function loadProducts() {
                 li.innerHTML = `
                     <a href="#">
                         <img src="/static/images/${product.images}" alt="${product.name}">
-<!--                        <img src="{{ url_for('static', filename='images/') }}${product.images}" alt="${product.name}">-->
                         <div class="gname">${product.name}</div>
                         <div class="gprice">
                             ${product.original_price ? `<span id="old">￥${product.original_price}</span>` : ''}
-                            <span id="new">￥${product.current_price}</span> 
+                            <span id="new">￥${product.current_price}</span>
                         </div>
                         <div class="gseller">${product.seller}</div>
+                        <div class="gsales">已售: ${product.sales}件</div>
                         <button class="add-to-cart-btn" data-id="${product.id}" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
                             加入购物车
                         </button>
