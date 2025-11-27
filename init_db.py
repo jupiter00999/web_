@@ -137,21 +137,18 @@ def custom_init_db(app):
                 'images': '农产品 (3).png',
                 'price_desc': '￥298/床',
                 'sales': 67
+            },
+            {
+                'name': '【测试机哦】宜州桑蚕丝 优质蚕丝被',
+                'original_price': 388.0,
+                'current_price': 298.0,
+                'seller': '宜州丝绸坊',
+                'images': '农产品 (3).png',
+                'price_desc': '￥298/床',
+                'sales': 67
             }
-        ]
 
-        # 修改添加商品的代码
-        for p in products:
-            product = Product(
-                name=p['name'],
-                original_price=p['original_price'],
-                current_price=p['current_price'],
-                seller=p['seller'],
-                images=p['images'],
-                price_desc=p['price_desc'],
-                sales=p['sales']  # 添加销量
-            )
-            db.session.add(product)
+        ]
 
         # 添加商品到数据库
         for p in products:
@@ -161,7 +158,8 @@ def custom_init_db(app):
                 current_price=p['current_price'],
                 seller=p['seller'],
                 images=p['images'],
-                price_desc = p['price_desc']
+                price_desc=p['price_desc'],
+                sales=p['sales']  # 添加销量
             )
             db.session.add(product)
 

@@ -142,10 +142,10 @@ def add_to_cart():
     if not product_id:
         return jsonify({'status': 'error', 'message': '商品ID不能为空'}), 400
 
-    # 检查商品是否存在
-    product = Product.query.get(product_id)
-    if not product:
-        return jsonify({'status': 'error', 'message': '商品不存在'}), 404
+    # # 检查商品是否存在
+    # product = Product.query.get(product_id)
+    # if not product:
+    #     return jsonify({'status': 'error', 'message': '商品不存在'}), 404
 
     # 检查购物车中是否已有该商品
     cart_item = CartItem.query.filter_by(user_id=current_user.id, product_id=product_id).first()
@@ -280,6 +280,34 @@ def get_products():
             'sales': p.sales,
         })
     return jsonify(product_list)
+
+
+# 商品详情页路由
+@app.route('/product/<int:product_id>')
+@login_required
+def product_detail(product_id):
+    # 获取商品详情
+    product = Product.query.get_or_404(product_id)
+    # 组装商品数据
+    product_data = {
+        'id': product.id,
+        'name': product.name,
+        'original_price': product.original_price,
+        'current_price': product.current_price,
+        'seller': product.seller,
+        'images': url_for('static', filename=f'images/{product.images}'),
+        'sales': product.sales,
+        'price_desc': product.price_desc
+    }
+    # 获取当前用户信息
+    current_profile = {
+        'id': current_user.id,
+        'name': current_user.nickname,
+        'img': url_for('static', filename=f'images/{current_user.avatar}')
+    }
+    return render_template('product.html',
+                         product=product_data,
+                         current_user_profile=current_profile)
 
 
 @app.route('/api/sales-data')

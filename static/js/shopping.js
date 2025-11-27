@@ -21,7 +21,7 @@ function loadProducts() {
                 const li = document.createElement('li');
                 li.className = 'good_li';
                 li.innerHTML = `
-                    <a href="#">
+                    <a href="/product/${product.id}">  <!-- 跳转到商品详情页 -->
                         <img src="/static/images/${product.images}" alt="${product.name}">
                         <div class="gname">${product.name}</div>
                         <div class="gprice">
@@ -30,7 +30,7 @@ function loadProducts() {
                         </div>
                         <div class="gseller">${product.seller}</div>
                         <div class="gsales">已售: ${product.sales}件</div>
-                        <button class="add-to-cart-btn" data-id="${product.id}" style="margin-top: 10px; width: 100%; padding: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                        <button class="add-to-cart-btn" data-id="${product.id}" style="margin-top: 10px; width: 100%; padding: 5px; background: #34bacc; color: white; border: none; border-radius: 4px; cursor: pointer;">
                             加入购物车
                         </button>
                     </a>

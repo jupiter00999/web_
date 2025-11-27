@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- 复用头部导航 -->
+    <nav class="navbar">
+        <div class="user-profile-card">
+            <img src="{{ current_user_profile.img }}" alt="用户头像" class="profile-avatar">
+            <span class="profile-name">{{ current_user_profile.name }}</span>
+        </div>
+        <p>当前登录用户：{{ current_user_profile.name }}</p>
+        <a href="{{ url_for('logout') }}" class="logout-btn">登出</a>
+    </nav>
+
+    <header id="header">
+        <div id="wrap">
+            <div id="logo">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='images/logo2048.png') }}" alt="">
+                </a>
+            </div>
+            <nav id="nav">
+                <ul>
+                    <li><a href="{{ url_for('index') }}">首页</a></li>
+                    <li>
+                        <a href="#">商品分类</a>
+                    </li>
+                    <li>
+                        <a href="#">收藏</a>
+                    </li>
+                    <li>
+                        <a href="#">订单</a>
+                    </li>
+                    <li>
+                        <a href="#">个人中心</a>
+                    </li>
+                    <li>
+                        <a href="#">帮助</a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- 搜索框 -->
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="搜索商品名称...">
+                <button class="search-btn">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <div>搜索</div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 商品详情主体 -->
+    <div class="container" style="padding: 30px;">
+        <div class="product-detail" style="display: flex; gap: 30px;">
+            <!-- 商品图片 -->
+            <div class="product-img" style="flex: 1;">
+                <img src="{{ product.images }}" alt="{{ product.name }}" style="width: 100%; max-width: 400px;">
+            </div>
+
+            <!-- 商品信息 -->
+            <div class="product-info" style="flex: 2;">
+                <h1 style="font-size: 24px; margin-bottom: 20px;">{{ product.name }}</h1>
+                <div class="price" style="margin: 20px 0;">
+                    {% if product.original_price %}
+                        <span style="color: #999; text-decoration: line-through; margin-right: 10px;">￥{{ product.original_price }}</span>
+                    {% endif %}
+                    <span style="color: red; font-size: 28px; font-weight: bold;">￥{{ product.current_price }}</span>
+                </div>
+                <div class="seller" style="margin: 10px 0; color: #666;">
+                    卖家：{{ product.seller }}
+                </div>
+                <div class="sales" style="margin: 10px 0; color: #666;">
+                    销量：{{ product.sales }} 件
+                </div>
+                <div class="price-desc" style="margin: 10px 0; color: #666;">
+                    {{ product.price_desc }}
+                </div>
+
+                <!-- 加入购物车按钮 -->
+                <button class="add-to-cart-btn"
+                        data-id="{{ product.id }}"
+                        style="margin-top: 30px; padding: 10px 30px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
+                    加入购物车
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入购物车相关脚本（复用现有逻辑） -->
+    <script src="{{ url_for('static', filename='js/shopping.js') }}"></script>
+    <script>
+        // 绑定当前页面的加入购物车按钮事件
+        document.addEventListener('DOMContentLoaded', function() {
+            const addBtn = document.querySelector('.add-to-cart-btn');
+            if (addBtn) {
+                addBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const productId = this.getAttribute('data-id');
+                    addToCart(productId); // 复用shopping.js中的addToCart函数
+                });
+            }
+            loadCartCount(); // 加载购物车数量
+        });
+    </script>
+</body>
+</html>

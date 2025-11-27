@@ -63,12 +63,14 @@
 
     <div class="container">
         <section class="welcome-section">
-            <h1>河池山水，养生福地，欢迎选购河池特色农产品</h1>
-            <!-- 新增：销量可视化区域 -->
-        <div class="sales-chart-section" style="margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 8px;">
-            <h2 style="text-align: center; margin-bottom: 20px; color: #333;">热销商品排行</h2>
-            <div id="sales-chart" style="width: 100%; height: 400px;"></div>
-        </div>
+            <h1 style="text-align: center; color: #2c6e5f; font-size: 2.2rem; margin: 20px 0; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(255,255,255,0.8);">
+              寻味河池·生态好礼 | 嗨，<span style="color: #006652; font-weight: bold; text-decoration: underline; text-underline-offset: 4px;">{{ current_user_profile.name }}</span>，这里有大山里的新鲜
+            </h1>
+            <!-- 热销商品排行区域 -->
+            <div class="sales-chart-section" style="margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                <h2 style="text-align: center; margin-bottom: 20px; color: #333;">热销商品排行</h2>
+                <div id="sales-chart" style="width: 100%; height: 400px;"></div>
+            </div>
             
             <div id="content">
 
@@ -116,10 +118,21 @@
         </section>
     </div>
 
-    
-<script src="{{ url_for('static', filename='js/shopping.js') }}"></script>
-<script src="{{ url_for('static', filename='js/sales-chart.js') }}"></script>
+    <!-- 页脚 -->
+    <footer style="margin-top: 50px; padding: 20px; background-color: #f8f9fa; text-align: center; border-top: 1px solid #e9ecef;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <p>© 2023 购购购平台 - 专注河池特色农产品销售</p>
+            <p style="margin: 5px 0; color: #666; font-size: 14px;">
+                联系我们：service@gougougou.com | 电话：400-123-4567
+            </p>
+            <p style="font-size: 12px; color: #999;">
+                本站商品均为正品保障，支持7天无理由退换
+            </p>
+        </div>
+    </footer>
 
+    
     <script src="{{ url_for('static', filename='js/shopping.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sales-chart.js') }}"></script>
 </body>
 </html>
