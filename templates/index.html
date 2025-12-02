@@ -28,25 +28,13 @@
             <!-- 导航栏-->
             <nav id="nav">
                 <ul>
-                    <li>
-                        <a href="#">首页</a>
-                    </li>
-                    <li> 
-                        <a href="#">商品分类</a>
-                    </li>
-                    <li>
-                        <a href="#">收藏</a>
-                    </li>
-                    <li>
-                        <a href="#">订单</a>
-                    </li>
-                    <li>
-                        <a href="#">个人中心</a>
-                    </li>                  
-                    <li>
-                        <a href="#">帮助</a>
-                    </li>
-                </ul>    
+                    <li><a href="{{ url_for('index') }}">首页</a></li>
+                    <li><a href="{{ url_for('profile') }}">个人中心</a></li>
+                    <li><a href="#">商品分类</a></li>
+                    <li><a href="#">收藏</a></li>
+                    <li><a href="#">订单</a></li>
+                    <li><a href="#">帮助</a></li>
+                </ul>
             </nav>
             <!-- 搜索框 -->
             <div class="search-container">
@@ -63,6 +51,7 @@
 
     <div class="container">
         <section class="welcome-section">
+            <!--欢迎语-->
             <h1 style="text-align: center; color: #2c6e5f; font-size: 2.2rem; margin: 20px 0; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(255,255,255,0.8);">
               寻味河池·生态好礼 | 嗨，<span style="color: #006652; font-weight: bold; text-decoration: underline; text-underline-offset: 4px;">{{ current_user_profile.name }}</span>，这里有大山里的新鲜
             </h1>
@@ -92,6 +81,7 @@
                     </div>
                 </div>
 
+                <!--商品列表-->
                 <div id="list_wrap">
                     <ul id="product-list">
 

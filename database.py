@@ -1,7 +1,5 @@
-
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
-
 
 db = SQLAlchemy()  # 数据库实例
 
@@ -20,7 +18,7 @@ class LoginUser(UserMixin, db.Model):
             'img': self.avatar
         }
 
-# 补充商品和购物车模型定义（与init_db.py保持一致）
+# 商品和购物车模型定义
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)

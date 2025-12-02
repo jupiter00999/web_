@@ -58,7 +58,6 @@ def login():
 
     return render_template('login.html')
 
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -328,6 +327,40 @@ def get_sales_data():
 
     return jsonify(sales_data)
 
+
+# 个人中心页面（查看+修改信息）
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    if request.method == 'POST':
+        # 1. 获取表单数据
+        nickname = request.form.get('nickname', current_user.nickname)
+        phone = request.form.get('phone', current_user.phone)
+
+        # 2. 处理头像上传（可选）
+        avatar_filename = current_user.avatar  # 默认保留原头像
+        if 'avatar' in request.files:
+            file = request.files['avatar']
+            if file.filename != '' and allowed_file(file.filename):
+                # 生成安全文件名（避免冲突）
+                filename = secure_filename(file.filename)
+                avatar_filename = f"user_{current_user.id}_{filename}"
+                # 保存新头像到静态目录
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], avatar_filename))
+
+        # 3. 更新用户信息到数据库
+        current_user.nickname = nickname
+        current_user.phone = phone
+        current_user.avatar = avatar_filename
+        db.session.commit()
+
+        flash('个人信息修改成功！', 'success')
+        return redirect(url_for('profile'))  # 刷新页面
+
+    # GET请求：渲染个人中心页面（传递当前用户信息）
+    user_info = current_user.to_dict()  # 复用to_dict方法获取用户数据
+    user_info['phone'] = current_user.phone  # 补充手机号字段
+    return render_template('profile.html', user=user_info)
 
 # --- 应用入口 ---
 if __name__ == '__main__':

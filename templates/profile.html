@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* 简单样式（无需修改style.css，直接内联） */
+        .profile-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 10px 0;
+        }
+        .submit-btn {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .back-btn {
+            margin-left: 10px;
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 复用首页导航栏（修复：导航栏HTML结构错误） -->
+    <header id="header">
+        <div id="wrap">
+            <div id="logo">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='images/logo2048.png') }}" alt="">
+                </a>
+            </div>
+            <nav id="nav">
+                <ul>
+                    <li><a href="{{ url_for('index') }}">首页</a></li>
+                    <li><a href="{{ url_for('profile') }}" style="color: #007bff;">个人中心</a></li>
+                    <li><a href="#">商品分类</a></li>
+                    <li><a href="#">收藏</a></li>
+                    <li><a href="#">订单</a></li>
+                    <li><a href="#">帮助</a></li>
+                    <li><a href="{{ url_for('logout') }}">登出</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="profile-container">
+        <h2 style="text-align: center; margin-bottom: 30px;">个人信息修改</h2>
+
+        <div style="text-align: center;">
+            <img src="{{ url_for('static', filename='images/' ~ user.avatar) }}"
+                 alt="当前头像" class="avatar-preview">
+        </div>
+
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="nickname">昵称</label>
+                <input type="text" id="nickname" name="nickname"
+                       value="{{ user.nickname }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">手机号</label>
+                <input type="tel" id="phone" name="phone"
+                       value="{{ user.phone }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="avatar">更换头像</label>
+                <input type="file" id="avatar" name="avatar"
+                       accept="image/png,image/jpg,image/jpeg,image/gif">
+                <small style="color: #666;">支持PNG、JPG、GIF格式</small>
+            </div>
+
+            <button type="submit" class="submit-btn">保存修改</button>
+            <a href="{{ url_for('index') }}" class="back-btn">返回首页</a>
+        </form>
+    </div>
+
+    <!-- 显示提示信息（修复3：background后面漏冒号） -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div style="max-width: 800px; margin: 10px auto; padding: 10px; background: {{ 'green' if category == 'success' else 'red' }}; color: white; border-radius: 4px; text-align: center;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</body>
+</html>

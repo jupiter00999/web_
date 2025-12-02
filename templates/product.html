@@ -91,6 +91,19 @@
             </div>
         </div>
     </div>
+        <!-- 页脚 -->
+    <footer style="margin-top: 50px; padding: 20px; background-color: #f8f9fa; text-align: center; border-top: 1px solid #e9ecef;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <p>© 2023 购购购平台 - 专注河池特色农产品销售</p>
+            <p style="margin: 5px 0; color: #666; font-size: 14px;">
+                联系我们：service@gougougou.com | 电话：400-123-4567
+            </p>
+            <p style="font-size: 12px; color: #999;">
+                本站商品均为正品保障，支持7天无理由退换
+            </p>
+        </div>
+    </footer>
+
 
     <!-- 引入购物车相关脚本（复用现有逻辑） -->
     <script src="{{ url_for('static', filename='js/shopping.js') }}"></script>
@@ -108,5 +121,6 @@
             loadCartCount(); // 加载购物车数量
         });
     </script>
+
 </body>
 </html>
